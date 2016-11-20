@@ -3,14 +3,18 @@
 
 #include <GLEW\glew.h>
 #include <GLFW\glfw3.h>
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
 #include "Sphere.h"
 
 const GLchar* vertexShaderSrc =
 "#version 330 core\n"
 "layout (location = 0) in vec3 pos;"
+"uniform mat4 mvp;"
 "void main()"
 "{"
-"   gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);"
+"   vec4 pos = vec4(pos.x, pos.y, pos.z, 1.0);"
+"	gl_Position = mvp*pos;"
 "}";
 const GLchar* fragmentShaderSrc =
 "#version 330 core\n"
@@ -94,12 +98,19 @@ int main()
 		std::cout << "Error! Shader program linker failure. "  << std::endl;
 	}
 
+	glm::vec3 pos =glm::vec3(0, 0, -5);
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+	glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
+	//glm::mat4 rot = glm::rotate(glm::mat4(1.0), 2, glm::vec3(0.0, 1.0, 0.0));
+	model = proj*model;
+	GLuint mvp = glGetUniformLocation(program, "mvp");
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		glUseProgram(program);
+		glUniformMatrix4fv(mvp, 1, GL_FALSE, &model[0][0]);
 		glBindVertexArray(vao);
 	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

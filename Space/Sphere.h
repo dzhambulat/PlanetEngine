@@ -1,7 +1,26 @@
 #pragma once
 class Sphere
 {
-public:
+	class TreeNode
+	{
+	public:
+		int levelOfDetail;
+		TreeNode* centerNode, *leftNode, *rightNode, *topNode, *parentNode;
+		float* points;
+
+		TreeNode(TreeNode* parentNode,int lod)
+		{
+			this->parentNode = parentNode;
+			this->levelOfDetail = lod;
+			centerNode = leftNode = rightNode = topNode = nullptr;
+		}
+		~TreeNode()
+		{
+			delete[] points;
+		}
+	};
+
+	public:
 	Sphere(double radius)
 	{
 		this->radius = radius;
@@ -11,7 +30,11 @@ public:
 
 private:
 	double radius;
-	const float OFACTOR = 0.7071067f;
 	float* generateOctaedr();
+	TreeNode* rootNodes[8];
+
+	void splitTriangle(TreeNode* node);
+	void reduceTriangle(TreeNode* node);
+
 };
 
