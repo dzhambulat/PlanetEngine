@@ -14,7 +14,7 @@ const GLchar* vertexShaderSrc =
 "void main()"
 "{"
 "   vec4 pos = vec4(pos.x, pos.y, pos.z, 1.0);"
-"	gl_Position = mvp*pos;"
+"	gl_Position = pos;"
 "}";
 const GLchar* fragmentShaderSrc =
 "#version 330 core\n"
@@ -44,11 +44,21 @@ int main()
 		-a,0.0,0.0,0.0,0.0,-a,0.0,-a,0.0
 	};
 
-//	Sphere sphere(5)
-	
+	Sphere sphere(3);
+
+	int vertexCount = 0;
+	auto verts = sphere.getVertexData(&vertexCount);
+	GLfloat* data = new GLfloat[vertexCount * 3];
+	for (int i = 0; i < vertexCount; i++)
+	{
+		data[i * 3] = verts[i].x;
+		data[i * 3 + 1] = verts[i].y;
+		data[i * 3 + 2] = verts[i].z;
+	}
+
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertexCount*3, data, GL_STATIC_DRAW);
 
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
@@ -98,24 +108,24 @@ int main()
 		std::cout << "Error! Shader program linker failure. "  << std::endl;
 	}
 
-	glm::vec3 pos =glm::vec3(0, 0, -5);
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
-	glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
+	//glm::vec3 pos =glm::vec3(0, 0, -5);
+	//glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+	//glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 	//glm::mat4 rot = glm::rotate(glm::mat4(1.0), 2, glm::vec3(0.0, 1.0, 0.0));
-	model = proj*model;
-	GLuint mvp = glGetUniformLocation(program, "mvp");
+//	model = proj*model;
+	//GLuint mvp = glGetUniformLocation(program, "mvp");
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		glUseProgram(program);
-		glUniformMatrix4fv(mvp, 1, GL_FALSE, &model[0][0]);
+		//glUniformMatrix4fv(mvp, 1, GL_FALSE, &model[0][0]);
 		glBindVertexArray(vao);
 	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-		glDrawArrays(GL_TRIANGLES, 0, 24);
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		glBindVertexArray(0);
 		glfwSwapBuffers(window);
 	}
