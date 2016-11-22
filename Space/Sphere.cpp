@@ -17,8 +17,8 @@ float* Sphere::generateOctaedr()
 	{
 		rootNodes[i] = new TreeNode(nullptr, 1);
 		rootNodes[i]->points[0] = glm::vec3(points[i * 9], points[i * 9 + 1], points[i * 9 + 2]);
-		rootNodes[i]->points[1] = glm::vec3(points[i * 9 + 3], points[i * 9 + 4], points[i * 9 + 2 + 5]);
-		rootNodes[i]->points[2] = glm::vec3(points[i * 9 + 6], points[i * 9 + 7], points[i * 9 + 2 + 8]);
+		rootNodes[i]->points[1] = glm::vec3(points[i * 9 + 3], points[i * 9 + 4], points[i * 9  + 5]);
+		rootNodes[i]->points[2] = glm::vec3(points[i * 9 + 6], points[i * 9 + 7], points[i * 9  + 8]);
 	}
 
 	return points;
@@ -42,8 +42,8 @@ glm::vec3* Sphere::getVertexData(int* len)
 	int offset = 0;
 	for (int i = 0; i < 8; i++)
 	{
-		memcpy(result + offset*sizeof(glm::vec3), resData[i], resLens[i]*sizeof(glm::vec3));
-		offset += resLens[i] * sizeof(glm::vec3);
+		memcpy(result + offset, resData[i], resLens[i]*sizeof(glm::vec3));
+		offset += resLens[i];
 	}
 	*len = dataLen;
 	return result;
