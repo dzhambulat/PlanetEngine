@@ -1,11 +1,9 @@
-﻿  Space.cpp
-c:\my projects\graphicexample\space\spaceship\space\Sphere.h(72): warning C4154: удаление массива; выполнено преобразование к указателю
-Space.cpp(68): warning C4101: ibo: неиспользованная локальная переменная
+﻿  RoamTerrain.cpp
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" противоречит использованию других библиотек; используйте параметр /NODEFAULTLIB:library
   Создание кода
-  33 of 51 functions (64.7%) were compiled, the rest were copied from previous compilation.
-    28 functions were new in current compilation
-    4 functions had inline decision re-evaluated but remain unchanged
+  1 of 99 functions ( 1.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    6 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
 glew32s.lib(glew.obj) : warning LNK4099: "vc120.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "C:\My projects\GraphicExample\Space\SpaceShip\Release\vc120.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Release\Space.exe

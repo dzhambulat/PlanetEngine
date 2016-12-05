@@ -21,9 +21,15 @@
     <ClCompile Include="Sphere.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="RoamTerrain.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sphere.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="RoamTerrain.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

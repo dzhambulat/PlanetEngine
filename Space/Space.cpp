@@ -34,11 +34,11 @@ int main()
 	GLuint vbo;
 	float a = 0.5;
 	GLfloat vertices[] = {
-		0.0,a,0.0,a,0.0,0.0,0.0,0.0,-a,
+		0.0,2*a,0.0,a,0.0,0.0,0.0,0.0,-a,
 		0.0,0.0,-a,-a,0.0,0.0,0.0,a,0.0,
 		0.0,a,0.0,-a,0.0,0.0,0.0,0.0,a,
-		0.0,0.0,a,a,0.0,0.0,0.0,a,0.0,
-		0.0,-a,0.0,0.0,0.0,-a,a,0.0,0.0,
+		0.0,0.0,a,a,0.0,0.0,0.0,5*a,0.0,
+		0.0,-a,0.0,0.0,0.0,a,a,0.0,0.0,
 		a,0.0,0.0,0.0,0.0,a,0.0,-a,0.0,
 		0.0,-a,0.0,0.0,0.0,a,-a,0.0,0.0,
 		-a,0.0,0.0,0.0,0.0,-a,0.0,-a,0.0
@@ -47,6 +47,7 @@ int main()
 	Sphere sphere(3);
 
 	int vertexCount = 0;
+
 	auto verts = sphere.getVertexData(&vertexCount);
 	GLfloat* data = new GLfloat[vertexCount * 3];
 	for (int i = 0; i < vertexCount; i++)
@@ -108,17 +109,19 @@ int main()
 		std::cout << "Error! Shader program linker failure. "  << std::endl;
 	}
 
-	glm::vec3 pos =glm::vec3(0, 0, -5);
+	glm::vec3 pos =glm::vec3(0, 0, -10);
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
 	glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
 	//glm::mat4 rot = glm::rotate(glm::mat4(1.0), 2, glm::vec3(0.0, 1.0, 0.0));
 	model = proj*model;
 	GLuint mvp = glGetUniformLocation(program, "mvp");
+
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
 		glClear(GL_COLOR_BUFFER_BIT);
-		
+		glCullFace(GL_BACK);
 		glUseProgram(program);
 		glUniformMatrix4fv(mvp, 1, GL_FALSE, &model[0][0]);
 		glBindVertexArray(vao);
@@ -135,7 +138,10 @@ int main()
 
 void on_keyboard(GLFWwindow* window, int key, int scanCode, int action, int mode)
 {
+	if (key == GLFW_KEY_UP)
+	{
 
+	}
 }
 
 void on_window_size(GLFWwindow* window, int width, int height)
