@@ -1,12 +1,6 @@
-﻿  Sphere.cpp
-c:\my projects\graphicexample\space\spaceship\space\sphere.cpp(5): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
-  Space.cpp
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(69): warning C4101: ibo: неиспользованная локальная переменная
-  RoamTerrain.cpp
-  Создание кода...
-c:\my projects\graphicexample\space\spaceship\space\sphere.cpp(17): warning C4172: возвращение адреса локальной или временной переменной : points
-LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" противоречит использованию других библиотек; используйте параметр /NODEFAULTLIB:library
-LINK : warning LNK4098: библиотека по умолчанию "MSVCRT" противоречит использованию других библиотек; используйте параметр /NODEFAULTLIB:library
-glew32s.lib(glew.obj) : warning LNK4099: "vc120.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "C:\My projects\GraphicExample\Space\SpaceShip\Debug\vc120.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
+﻿  RoamTerrain.cpp
+LINK : warning LNK4098: сшсышюЄхър яю єьюыўрэш■ "LIBCMT" яЁюЄштюЁхўшЄ шёяюы№чютрэш■ фЁєушї сшсышюЄхъ; шёяюы№чєщЄх ярЁрьхЄЁ /NODEFAULTLIB:library
+LINK : warning LNK4098: сшсышюЄхър яю єьюыўрэш■ "MSVCRT" яЁюЄштюЁхўшЄ шёяюы№чютрэш■ фЁєушї сшсышюЄхъ; шёяюы№чєщЄх ярЁрьхЄЁ /NODEFAULTLIB:library
+glew32s.lib(glew.obj) : warning LNK4099: "vc120.pdb" PDB эх эрщфхэ ё "glew32s.lib(glew.obj)" шыш эр "C:\My projects\GraphicExample\Space\SpaceShip\Debug\vc120.pdb"; ъюьяюэютър юс·хъЄр т√яюыэ хЄё  ъръ яЁш юЄёєЄёЄтшш юЄырфюўэ√ї фрээ√ї
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.exe
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.pdb (Full PDB)

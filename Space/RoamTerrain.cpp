@@ -35,6 +35,8 @@ namespace Roam
 
 			lastNode = current;
 		}
+
+		splitPolygon(firstNode);
 	}
 
 	void RoamTerrain::addRenderNode(shared_ptr<PolygonNode> node)
@@ -43,6 +45,14 @@ namespace Roam
 		node->prev = lastNode;
 		lastNode = node;
 	}
+
+	void RoamTerrain::addRenderNodeFirst(shared_ptr<PolygonNode> node)
+	{
+		firstNode->prev = node;
+		node->next = firstNode;
+		firstNode = node;
+	}
+
 
 	void RoamTerrain::splitPolygon(shared_ptr<PolygonNode> node)
 	{
@@ -56,7 +66,7 @@ namespace Roam
 
 		vec3 ft = node->pointers[0] - node->pointers[2];
 		ft /= 2;
-		ft += node->pointers[0];
+		ft += node->pointers[2];
 
 		node->firstChild = make_shared<PolygonNode>(node);
 		node->firstChild->pointers[0] = node->pointers[0];
@@ -78,10 +88,12 @@ namespace Roam
 		node->centerChild->pointers[1] = ft;
 		node->centerChild->pointers[2] = fs;
 
-		addRenderNode(node->firstChild);
-		addRenderNode(node->secondChild);
-		addRenderNode(node->thirdChild);
-		addRenderNode(node->centerChild);
+		addRenderNodeFirst(node->firstChild);
+		addRenderNodeFirst(node->secondChild);
+		addRenderNodeFirst(node->thirdChild);
+		addRenderNodeFirst(node->centerChild);
+		node->firstChild->splitted = node->secondChild->splitted = node->thirdChild->splitted = node->centerChild->splitted = true;
+		this->polygonCount += 4;
 	}
 
 	void RoamTerrain::reducePolygon(PolygonNode* node)
@@ -89,6 +101,28 @@ namespace Roam
 
 	}
 
+	float RoamTerrain::getDistanceFromPolygon(glm::vec3 eye, shared_ptr<PolygonNode> polygonNode) const
+	{
+		glm::vec3 polygonCenter = (polygonNode->pointers[0] + polygonNode->pointers[1] + polygonNode->pointers[2]);
+		polygonCenter /= 3;
+		
+		return glm::length(polygonCenter - eye);
+	}
+	void RoamTerrain::process(glm::vec3 eye)
+	{
+		shared_ptr<PolygonNode> current = firstNode;
+
+		while (current != nullptr)
+		{
+			double dist = getDistanceFromPolygon(eye, current);
+			if (dist < 10 && !current->splitted)
+			{
+				current->splitted = true;
+				splitPolygon(current);
+			}
+			current = current->next;
+		}
+	}
 	int RoamTerrain::getAllVertices(vec3** result) const
 	{
 		int vertexCount = polygonCount * 3;

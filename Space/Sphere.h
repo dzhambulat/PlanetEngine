@@ -14,6 +14,7 @@ class Sphere
 	}
 
 	glm::vec3* getVertexData(int*);
+	void render(glm::vec3 eye);
 	~Sphere();
 
 private:

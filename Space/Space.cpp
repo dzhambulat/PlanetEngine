@@ -6,6 +6,7 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include "Sphere.h"
+#include "Camera.h"
 
 const GLchar* vertexShaderSrc =
 "#version 330 core\n"
@@ -26,23 +27,12 @@ const GLchar* fragmentShaderSrc =
 
 
 GLFWwindow* init(int windowWidth, int windotHeight, const char* windowTitle);
-
+Camera camera(glm::vec3(0, 0, -20), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 int main()
 {
 	GLFWwindow* window = init(1024, 760, "Space ship");
 	
 	GLuint vbo;
-	float a = 0.5;
-	GLfloat vertices[] = {
-		0.0,2*a,0.0,a,0.0,0.0,0.0,0.0,-a,
-		0.0,0.0,-a,-a,0.0,0.0,0.0,a,0.0,
-		0.0,a,0.0,-a,0.0,0.0,0.0,0.0,a,
-		0.0,0.0,a,a,0.0,0.0,0.0,5*a,0.0,
-		0.0,-a,0.0,0.0,0.0,a,a,0.0,0.0,
-		a,0.0,0.0,0.0,0.0,a,0.0,-a,0.0,
-		0.0,-a,0.0,0.0,0.0,a,-a,0.0,0.0,
-		-a,0.0,0.0,0.0,0.0,-a,0.0,-a,0.0
-	};
 
 	Sphere sphere(3);
 
@@ -56,10 +46,10 @@ int main()
 		data[i * 3 + 1] = verts[i].y;
 		data[i * 3 + 2] = verts[i].z;
 	}
-
+	
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, vertexCount*3, data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertexCount*3*sizeof(GLfloat), data, GL_DYNAMIC_DRAW);
 
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
@@ -109,11 +99,13 @@ int main()
 		std::cout << "Error! Shader program linker failure. "  << std::endl;
 	}
 
-	glm::vec3 pos =glm::vec3(0, 0, -10);
+	
+	glm::vec3 pos =glm::vec3(0, 0, -50);
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
 	glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
+	glm::mat4 cam = camera.getMatrix();
 	//glm::mat4 rot = glm::rotate(glm::mat4(1.0), 2, glm::vec3(0.0, 1.0, 0.0));
-	model = proj*model;
+	model = proj*cam;
 	GLuint mvp = glGetUniformLocation(program, "mvp");
 
 	
@@ -121,14 +113,32 @@ int main()
 	{
 		glfwPollEvents();
 		glClear(GL_COLOR_BUFFER_BIT);
-		glCullFace(GL_BACK);
+		sphere.render(camera.getEye());
+		verts = sphere.getVertexData(&vertexCount);
+		delete[] data;
+		data = new GLfloat[vertexCount * 3];
+		for (int i = 0; i < vertexCount; i++)
+		{
+			data[i * 3] = verts[i].x;
+			data[i * 3 + 1] = verts[i].y;
+			data[i * 3 + 2] = verts[i].z;
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), data, GL_DYNAMIC_DRAW);
+
+		//glCullFace(GL_BACK);
 		glUseProgram(program);
+
+		glm::mat4 cam = camera.getMatrix();
+		model = proj*cam;
 		glUniformMatrix4fv(mvp, 1, GL_FALSE, &model[0][0]);
+
 		glBindVertexArray(vao);
 	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+		glDrawArrays(GL_TRIANGLES, 0, 200);
 		glBindVertexArray(0);
 		glfwSwapBuffers(window);
 	}
@@ -140,7 +150,15 @@ void on_keyboard(GLFWwindow* window, int key, int scanCode, int action, int mode
 {
 	if (key == GLFW_KEY_UP)
 	{
-
+		glm::vec3 eye = camera.getEye();
+		eye.z += 1;
+		camera.setEye(eye);
+	}
+	if (key == GLFW_KEY_DOWN)
+	{
+		glm::vec3 eye = camera.getEye();
+		eye.z -= 1;
+		camera.setEye(eye);
 	}
 }
 

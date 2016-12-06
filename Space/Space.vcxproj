@@ -146,11 +146,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="RoamTerrain.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="RoamTerrain.h" />
     <ClInclude Include="Sphere.h" />
   </ItemGroup>
