@@ -1,4 +1,8 @@
-﻿  RoamTerrain.cpp
-c:\my projects\graphicexample\space\spaceship\space\roamterrain.cpp(128): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+﻿  Sphere.cpp
+c:\my projects\graphicexample\space\spaceship\space\sphere.cpp(5): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  Space.cpp
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(59): warning C4101: ibo: неиспользованная локальная переменная
+  Создание кода...
+c:\my projects\graphicexample\space\spaceship\space\sphere.cpp(19): warning C4172: возвращение адреса локальной или временной переменной : points
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.exe
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.pdb (Full PDB)

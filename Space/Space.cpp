@@ -138,7 +138,7 @@ int main()
 	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-		glDrawArrays(GL_TRIANGLES, 0, 200);
+		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		glBindVertexArray(0);
 		glfwSwapBuffers(window);
 	}
