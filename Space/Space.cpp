@@ -27,7 +27,7 @@ const GLchar* fragmentShaderSrc =
 
 
 GLFWwindow* init(int windowWidth, int windotHeight, const char* windowTitle);
-Camera camera(glm::vec3(0, 0, -20), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+Camera camera(glm::vec3(0, 0, -150), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 int main()
 {
 	GLFWwindow* window = init(1024, 760, "Space ship");

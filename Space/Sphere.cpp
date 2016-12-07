@@ -15,7 +15,7 @@ float* Sphere::generateOctaedr()
 		0.0,-a,0.0,0.0,0.0,a,-a,0.0,0.0
 		 };
 
-	terrain->initialize(points, 72);
+	terrain->initialize(points, 72, [](glm::vec3 pos) {  pos /= length(pos); pos *= 3; return pos; });
 	return points;
 }
 
