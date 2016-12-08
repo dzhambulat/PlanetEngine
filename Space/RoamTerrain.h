@@ -2,7 +2,7 @@
 #include <vector>
 #include <glm\glm.hpp>
 #include <memory>
-
+#include <iostream>
 using namespace glm;
 using namespace std;
 
@@ -25,6 +25,10 @@ namespace Roam
 				this->lod = lod;
 			}
 
+			~PolygonNode()
+			{
+				cout << "remove";
+			}
 			vec3 pointers[3];
 			bool splitted = false;
 			int lod = 1;

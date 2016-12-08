@@ -1,5 +1,5 @@
 #include "RoamTerrain.h"
-
+#include <iostream>
 namespace Roam
 {
 	RoamTerrain::RoamTerrain()
@@ -47,6 +47,9 @@ namespace Roam
 
 	void RoamTerrain::addRenderNodeFirst(shared_ptr<PolygonNode> node)
 	{
+		static int count = 0;
+		count++;
+		std::cout << count<<"\t";
 		firstNode->prev = node;
 		node->next = firstNode;
 		firstNode = node;
@@ -119,6 +122,7 @@ namespace Roam
 		removeNode(parent->secondChild);
 		removeNode(parent->thirdChild);
 		removeNode(parent->centerChild);
+		parent->firstChild = parent->secondChild = parent->thirdChild = parent->centerChild = nullptr;
 
 		addRenderNodeFirst(parent);
 	}

@@ -141,6 +141,7 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		glBindVertexArray(0);
 		glfwSwapBuffers(window);
+
 	}
 	return 0;
 }
