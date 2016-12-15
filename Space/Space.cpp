@@ -27,14 +27,14 @@ const GLchar* fragmentShaderSrc =
 
 
 GLFWwindow* init(int windowWidth, int windotHeight, const char* windowTitle);
-Camera camera(glm::vec3(0, 0, -150), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+Camera camera(glm::vec3(0, 0, -100000), glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
 int main()
 {
 	GLFWwindow* window = init(1024, 760, "Space ship");
 	
 	GLuint vbo;
 
-	Sphere sphere(3);
+	Sphere sphere(6000);
 
 	int vertexCount = 0;
 
@@ -100,9 +100,9 @@ int main()
 	}
 
 	
-	glm::vec3 pos =glm::vec3(0, 0, -50);
+	glm::vec3 pos =glm::vec3(0, 0, 0);
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
-	glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.f);
+	glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 500000.f);
 	glm::mat4 cam = camera.getMatrix();
 	//glm::mat4 rot = glm::rotate(glm::mat4(1.0), 2, glm::vec3(0.0, 1.0, 0.0));
 	model = proj*cam;
@@ -123,11 +123,10 @@ int main()
 			data[i * 3 + 1] = verts[i].y;
 			data[i * 3 + 2] = verts[i].z;
 		}
-
+		delete[] verts;
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), data, GL_DYNAMIC_DRAW);
 
-		//glCullFace(GL_BACK);
 		glUseProgram(program);
 
 		glm::mat4 cam = camera.getMatrix();
@@ -137,6 +136,7 @@ int main()
 		glBindVertexArray(vao);
 	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		cout << vertexCount/3.0 << " ";
 	//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		glBindVertexArray(0);
@@ -151,15 +151,44 @@ void on_keyboard(GLFWwindow* window, int key, int scanCode, int action, int mode
 {
 	if (key == GLFW_KEY_UP)
 	{
-		glm::vec3 eye = camera.getEye();
-		eye.z += 1;
-		camera.setEye(eye);
+
+		if (camera.getEye().z > -150) return;
+		if (camera.getEye().z < -1500)
+		camera.moveForward(1000);
+		else if (camera.getEye().z < -150)
+		{
+			camera.moveForward(5);
+		}
 	}
 	if (key == GLFW_KEY_DOWN)
 	{
 		glm::vec3 eye = camera.getEye();
-		eye.z -= 1;
+		eye.z -= 150;
 		camera.setEye(eye);
+	}
+	if (key == GLFW_KEY_Q)
+	{
+		camera.rotateX(3.14/180);
+	}
+	if (key == GLFW_KEY_A)
+	{
+		camera.rotateX(-3.14 / 180);
+	}
+	if (key == GLFW_KEY_Z)
+	{
+		camera.rotateY(3.14 / 180);
+	}
+	if (key == GLFW_KEY_X)
+	{
+		camera.rotateY(-3.14 / 180);
+	}
+	if (key == GLFW_KEY_W)
+	{
+		camera.rotateZ(-3.14 / 180);
+	}
+	if (key == GLFW_KEY_E)
+	{
+		camera.rotateZ(3.14 / 180);
 	}
 }
 

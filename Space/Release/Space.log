@@ -1,9 +1,15 @@
-﻿  RoamTerrain.cpp
+﻿  Camera.cpp
+  RoamTerrain.cpp
+RoamTerrain.cpp(133): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+  Space.cpp
+Space.cpp(59): warning C4101: ibo: неиспользованная локальная переменная
+Space.cpp(168): warning C4305: аргумент: усечение из "double" к "float"
+  Sphere.cpp
+Sphere.cpp(5): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
 LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" противоречит использованию других библиотек; используйте параметр /NODEFAULTLIB:library
   Создание кода
-  1 of 99 functions ( 1.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+c:\my projects\graphicexample\space\spaceship\space\sphere.cpp(19): warning C4172: возвращение адреса локальной или временной переменной : points
+  All 156 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Создание кода завершено
 glew32s.lib(glew.obj) : warning LNK4099: "vc120.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "C:\My projects\GraphicExample\Space\SpaceShip\Release\vc120.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Release\Space.exe

@@ -47,6 +47,7 @@ namespace Roam
 		void reducePolygon(shared_ptr<PolygonNode> polygonNode);
 		void addRenderNode(shared_ptr<PolygonNode> polygonNode);
 		void removeNode(shared_ptr<PolygonNode> polygonNode);
+		void splitPolygon(shared_ptr<PolygonNode> polygonNode, int endLod);
 		float getTreshholdDistance(int lod) const;
 		void RoamTerrain::addRenderNodeFirst(shared_ptr<PolygonNode> node);
 		float getDistanceFromPolygon(glm::vec3 eye,shared_ptr<PolygonNode> polygonNode) const;

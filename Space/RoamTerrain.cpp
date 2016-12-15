@@ -26,16 +26,17 @@ namespace Roam
 			current->pointers[0] = glm::vec3(data[i * 9], data[i * 9 + 1], data[i * 9 + 2]);
 			current->pointers[1] = glm::vec3(data[i * 9 + 3], data[i * 9 + 4], data[i * 9 + 5]);
 			current->pointers[2] = glm::vec3(data[i * 9 + 6], data[i * 9 + 7], data[i * 9 + 8]);
-
+			splitPolygon(current, 3);
 			if (i < length / 9 - 1)
 			{
 				current->next = make_shared<PolygonNode>();
 				current->next->prev = current;
 				current = current->next;
 			}
-
+		
 			lastNode = current;
 		}
+
 	}
 
 	void RoamTerrain::addRenderNode(shared_ptr<PolygonNode> node)
@@ -47,9 +48,6 @@ namespace Roam
 
 	void RoamTerrain::addRenderNodeFirst(shared_ptr<PolygonNode> node)
 	{
-		static int count = 0;
-		count++;
-		std::cout << count<<"\t";
 		firstNode->prev = node;
 		node->next = firstNode;
 		firstNode = node;
@@ -65,10 +63,23 @@ namespace Roam
 			node->prev->next = node->next;
 		else
 			firstNode = node->next;
+
+		node->next = node->prev = nullptr;
+	}
+
+	void RoamTerrain::splitPolygon(shared_ptr<PolygonNode> node, int endLod)
+	{
+		if (node->lod == endLod) return;
+		splitPolygon(node);
+		splitPolygon(node->firstChild, endLod);
+		splitPolygon(node->secondChild, endLod);
+		splitPolygon(node->thirdChild, endLod);
+		splitPolygon(node->centerChild, endLod);
 	}
 
 	void RoamTerrain::splitPolygon(shared_ptr<PolygonNode> node)
 	{
+
 		vec3 fs = node->pointers[1] - node->pointers[0];
 		fs /= 2;
 		fs += node->pointers[0];
@@ -109,7 +120,7 @@ namespace Roam
 		addRenderNodeFirst(node->secondChild);
 		addRenderNodeFirst(node->thirdChild);
 		addRenderNodeFirst(node->centerChild);
-		node->firstChild->splitted = node->secondChild->splitted = node->thirdChild->splitted = node->centerChild->splitted = true;
+
 		this->polygonCount += 3;
 		removeNode(node);
 	}
@@ -118,6 +129,9 @@ namespace Roam
 	{
 		shared_ptr<PolygonNode> parent = node->parent;
 
+		if (parent->firstChild->firstChild != nullptr || parent->secondChild->firstChild != nullptr || parent->thirdChild->firstChild != nullptr || parent->centerChild->firstChild != nullptr)
+			return;
+
 		removeNode(parent->firstChild);
 		removeNode(parent->secondChild);
 		removeNode(parent->thirdChild);
@@ -125,11 +139,12 @@ namespace Roam
 		parent->firstChild = parent->secondChild = parent->thirdChild = parent->centerChild = nullptr;
 
 		addRenderNodeFirst(parent);
+		this->polygonCount -= 3;
 	}
 
 	float RoamTerrain::getTreshholdDistance(int lod) const
 	{
-		return 30.0/pow(2, lod-1);
+		return 1000000.0/pow(2, lod-1);
 	}
 
 	float RoamTerrain::getDistanceFromPolygon(glm::vec3 eye, shared_ptr<PolygonNode> polygonNode) const
@@ -146,16 +161,19 @@ namespace Roam
 		while (current != nullptr)
 		{
 			double dist = getDistanceFromPolygon(eye, current);
+
 			double treshhold = getTreshholdDistance(current->lod);
-			if (dist> 0.1 && dist < treshhold )
+			if (dist > 0.1 && dist < treshhold && current->lod < 10)
 			{
 				splitPolygon(current);
+			//	std::cout << "Split Dist " << dist << std::endl << " " << current->lod << std::endl;
 			}
 			else if (current->lod > 1)
 			{
 				treshhold = getTreshholdDistance(current->lod - 1);
-					if (dist > treshhold)
+					if (dist >= treshhold+3000)
 					{
+					//	std::cout << "Reduce Dist " << dist << std::endl << " " << current->lod << std::endl;
 						reducePolygon(current);
 					}
 			}

@@ -5,7 +5,7 @@
 class Camera
 {
 private:
-	glm::vec3 eye, center, up;
+	glm::vec3 eye, center, up,right;
 
 public:
 	Camera();
@@ -13,6 +13,10 @@ public:
 	~Camera();
 
 	void setEye(glm::vec3 eye);
+	void rotateX(float angle);
+	void rotateY(float angle);
+	void rotateZ(float angle);
+	void moveForward(float step);
 
 	glm::vec3 getEye() const;
 	glm::mat4 getMatrix() const;

@@ -1,4 +1,4 @@
-﻿  Space.cpp
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(59): warning C4101: ibo: неиспользованная локальная переменная
+﻿  RoamTerrain.cpp
+c:\my projects\graphicexample\space\spaceship\space\roamterrain.cpp(147): warning C4244: return: преобразование "double" в "float", возможна потеря данных
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.exe
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.pdb (Full PDB)
