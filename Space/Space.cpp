@@ -11,18 +11,22 @@
 const GLchar* vertexShaderSrc =
 "#version 330 core\n"
 "layout (location = 0) in vec3 pos;"
+"out vec4 ppp;"
 "uniform mat4 mvp;"
 "void main()"
 "{"
 "   vec4 pos = vec4(pos.x, pos.y, pos.z, 1.0);"
+"	ppp=pos;"
 "	gl_Position = mvp*pos;"
 "}";
 const GLchar* fragmentShaderSrc =
 "#version 330 core\n"
+"in vec4 ppp;"
 "out vec4 frag_color;"
 "void main()"
 "{"
-"   frag_color = vec4(0.5, 0.5f, 0.4f, 1.0f);"
+"	float len=length(ppp-vec4(0.0,0.0,0.0,1.0));"
+"   frag_color = vec4(0.1,(len-6000)/500.0,0.1,1.0);"
 "}";
 
 
@@ -85,7 +89,7 @@ int main()
 	if (!result)
 	{
 
-		std::cout << "Error! Vertex shader failed to compile. " <<std::endl;
+		std::cout << "Error! Fragment shader failed to compile. " <<std::endl;
 	}
 
 	GLuint program = glCreateProgram();
@@ -125,7 +129,7 @@ int main()
 		}
 		delete[] verts;
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), data, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), data, GL_STATIC_DRAW);
 
 		glUseProgram(program);
 
@@ -135,7 +139,7 @@ int main()
 
 		glBindVertexArray(vao);
 	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		cout << vertexCount/3.0 << " ";
 	//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
@@ -149,13 +153,15 @@ int main()
 
 void on_keyboard(GLFWwindow* window, int key, int scanCode, int action, int mode)
 {
+	double dist = glm::length(camera.getEye() - glm::vec3(0, 0, 0));
+
 	if (key == GLFW_KEY_UP)
 	{
 
-		if (camera.getEye().z > -150) return;
-		if (camera.getEye().z < -1500)
+		if (dist< 6001) return;
+		if (dist > 8500)
 		camera.moveForward(1000);
-		else if (camera.getEye().z < -150)
+		else if (dist > 6550)
 		{
 			camera.moveForward(5);
 		}

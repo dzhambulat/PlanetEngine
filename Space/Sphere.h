@@ -1,6 +1,7 @@
 #pragma once
 #include <glm\glm.hpp>
 #include "RoamTerrain.h"
+#include "NoiseHelper.h"
 
 class Sphere
 {
@@ -11,6 +12,7 @@ class Sphere
 		this->radius = radius;
 		this->terrain = new Roam::RoamTerrain();
 		generateOctaedr();
+		NoiseHelpers::initPerlin(10);
 	}
 
 	glm::vec3* getVertexData(int*);

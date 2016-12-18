@@ -144,7 +144,7 @@ namespace Roam
 
 	float RoamTerrain::getTreshholdDistance(int lod) const
 	{
-		return 1000000.0/pow(2, lod-1);
+		return 100000.0/pow(2, lod-1);
 	}
 
 	float RoamTerrain::getDistanceFromPolygon(glm::vec3 eye, shared_ptr<PolygonNode> polygonNode) const
