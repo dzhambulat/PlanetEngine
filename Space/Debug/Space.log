@@ -1,10 +1,10 @@
 ﻿  Space.cpp
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(63): warning C4101: ibo: неиспользованная локальная переменная
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(177): warning C4305: аргумент: усечение из "double" к "float"
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(181): warning C4305: аргумент: усечение из "double" к "float"
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(185): warning C4305: аргумент: усечение из "double" к "float"
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(189): warning C4305: аргумент: усечение из "double" к "float"
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(193): warning C4305: аргумент: усечение из "double" к "float"
-c:\my projects\graphicexample\space\spaceship\space\space.cpp(197): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(65): warning C4101: ibo: неиспользованная локальная переменная
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(200): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(204): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(208): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(212): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(216): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(220): warning C4305: аргумент: усечение из "double" к "float"
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.exe
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.pdb (Full PDB)

@@ -30,6 +30,9 @@
     <ClCompile Include="NoiseHelper.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderHelper.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sphere.h">
@@ -42,6 +45,9 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="NoiseHelper.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderHelper.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

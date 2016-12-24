@@ -27,7 +27,7 @@ namespace Roam
 
 			~PolygonNode()
 			{
-				cout << "remove";
+			//	cout << "remove";
 			}
 			vec3 pointers[3];
 			bool splitted = false;
@@ -40,6 +40,8 @@ namespace Roam
 
 
 	private:
+
+		int trashes[10] = {100000,90000,80000,50000,25000,10000,5000,2000,1000,500};
 		glm::vec3 (*processFunc)(glm::vec3 pos);
 		shared_ptr<PolygonNode> lastNode;
 		shared_ptr<PolygonNode> firstNode;

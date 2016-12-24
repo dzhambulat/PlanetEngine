@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #define GLEW_STATIC
 
 #include <GLEW\glew.h>
@@ -7,6 +8,7 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include "Sphere.h"
 #include "Camera.h"
+#include "ShaderHelper.h"
 
 const GLchar* vertexShaderSrc =
 "#version 330 core\n"
@@ -29,7 +31,7 @@ const GLchar* fragmentShaderSrc =
 "   frag_color = vec4(0.1,(len-6000)/500.0,0.1,1.0);"
 "}";
 
-
+void showFPS(GLFWwindow* window);
 GLFWwindow* init(int windowWidth, int windotHeight, const char* windowTitle);
 Camera camera(glm::vec3(0, 0, -100000), glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
 int main()
@@ -71,31 +73,11 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	*/
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, &vertexShaderSrc, NULL);
-	glCompileShader(vs);
 	GLint result;
 
-	glGetShaderiv(vs, GL_COMPILE_STATUS, &result);
-	if (!result)
-	{
-	//	glGetShaderInfoLog(vs, sizeof(infoLog), NULL, infoLog);
-		std::cout << "Error! Vertex shader failed to compile. " << std::endl;
-	}
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, 1, &fragmentShaderSrc, NULL);
-	glCompileShader(fs);
-	glGetShaderiv(fs, GL_COMPILE_STATUS, &result);
-	if (!result)
-	{
+	//GLuint program = glCreateProgram();
+	GLuint program = ShaderHelper::createShaderProgram("planet");
 
-		std::cout << "Error! Fragment shader failed to compile. " <<std::endl;
-	}
-
-	GLuint program = glCreateProgram();
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
 
 	glGetProgramiv(program, GL_LINK_STATUS, &result);
 	if (!result)
@@ -116,7 +98,13 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClearDepth(1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+		glDepthRange(0.0f, 1.0f);
+
 		sphere.render(camera.getEye());
 		verts = sphere.getVertexData(&vertexCount);
 		delete[] data;
@@ -136,20 +124,51 @@ int main()
 		glm::mat4 cam = camera.getMatrix();
 		model = proj*cam;
 		glUniformMatrix4fv(mvp, 1, GL_FALSE, &model[0][0]);
-
+		
 		glBindVertexArray(vao);
-	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		cout << vertexCount/3.0 << " ";
-	//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+	/*	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
+	//	cout << vertexCount/3.0 << " ";
+		/*glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);*/
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		glBindVertexArray(0);
 		glfwSwapBuffers(window);
+		showFPS(window);
 
 	}
 	return 0;
 }
 
+void showFPS(GLFWwindow* window)
+{
+	static double previousSeconds = 0.0;
+	static int frameCount = 0;
+	double elapsedSeconds;
+	double currentSeconds = glfwGetTime(); // returns number of seconds since GLFW started, as double float
+
+	elapsedSeconds = currentSeconds - previousSeconds;
+	ostringstream outs;
+	// Limit text updates to 4 times per second
+	if (elapsedSeconds > 0.25)
+	{
+		previousSeconds = currentSeconds;
+		double fps = (double)frameCount / elapsedSeconds;
+		double msPerFrame = 1000.0 / fps;
+
+		// The C++ way of setting the window title
+
+		outs.precision(3);	// decimal places
+		outs << std::fixed
+			<< "FPS: " << fps << "    "
+			<< "Frame Time: " << msPerFrame << " (ms)";
+		glfwSetWindowTitle(window, outs.str().c_str());
+
+		// Reset for next average.
+		frameCount = 0;
+	}
+
+	frameCount++;
+}
 
 void on_keyboard(GLFWwindow* window, int key, int scanCode, int action, int mode)
 {
@@ -161,9 +180,13 @@ void on_keyboard(GLFWwindow* window, int key, int scanCode, int action, int mode
 		if (dist< 6001) return;
 		if (dist > 8500)
 		camera.moveForward(1000);
-		else if (dist > 6550)
+		else
 		{
+			//	else if (dist > 6550)
+			//	{
 			camera.moveForward(5);
+			std::cout << "Height " << dist << " ";
+			//	}
 		}
 	}
 	if (key == GLFW_KEY_DOWN)
@@ -213,6 +236,7 @@ GLFWwindow* init(int windowWidth, int windowHeight, const char* windowTitle)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_DEPTH_BITS, 32);
 
 	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, windowTitle, NULL, NULL);
 	if (!window)

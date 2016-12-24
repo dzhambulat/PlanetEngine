@@ -149,6 +149,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="NoiseHelper.cpp" />
     <ClCompile Include="RoamTerrain.cpp" />
+    <ClCompile Include="ShaderHelper.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="NoiseHelper.h" />
     <ClInclude Include="RoamTerrain.h" />
+    <ClInclude Include="ShaderHelper.h" />
     <ClInclude Include="Sphere.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

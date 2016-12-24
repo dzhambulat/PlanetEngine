@@ -26,7 +26,7 @@ namespace Roam
 			current->pointers[0] = glm::vec3(data[i * 9], data[i * 9 + 1], data[i * 9 + 2]);
 			current->pointers[1] = glm::vec3(data[i * 9 + 3], data[i * 9 + 4], data[i * 9 + 5]);
 			current->pointers[2] = glm::vec3(data[i * 9 + 6], data[i * 9 + 7], data[i * 9 + 8]);
-			splitPolygon(current, 3);
+			splitPolygon(current, 5);
 			if (i < length / 9 - 1)
 			{
 				current->next = make_shared<PolygonNode>();
@@ -144,7 +144,8 @@ namespace Roam
 
 	float RoamTerrain::getTreshholdDistance(int lod) const
 	{
-		return 100000.0/pow(2, lod-1);
+		//return 800000.0/pow(2, lod-1);
+		return  this->trashes[lod - 1];
 	}
 
 	float RoamTerrain::getDistanceFromPolygon(glm::vec3 eye, shared_ptr<PolygonNode> polygonNode) const
@@ -166,7 +167,7 @@ namespace Roam
 			if (dist > 0.1 && dist < treshhold && current->lod < 10)
 			{
 				splitPolygon(current);
-			//	std::cout << "Split Dist " << dist << std::endl << " " << current->lod << std::endl;
+				std::cout << "Split Dist " << dist << std::endl << " " << current->lod << std::endl;
 			}
 			else if (current->lod > 1)
 			{
