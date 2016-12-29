@@ -155,7 +155,7 @@ namespace Roam
 		
 		return glm::length(polygonCenter - eye);
 	}
-	void RoamTerrain::process(glm::vec3 eye)
+	void RoamTerrain::process(glm::vec3 eye,glm::vec3 center)
 	{
 		shared_ptr<PolygonNode> current = firstNode;
 
@@ -164,15 +164,18 @@ namespace Roam
 			double dist = getDistanceFromPolygon(eye, current);
 
 			double treshhold = getTreshholdDistance(current->lod);
-			if (dist > 0.1 && dist < treshhold && current->lod < 10)
+			glm::vec3 edge1 = current->pointers[2] - current->pointers[0];
+			glm::vec3 edge2 = current->pointers[1] - current->pointers[0];
+
+			if (dist > 0.1 && dist < treshhold && current->lod < 17 && glm::dot(glm::cross(edge1,edge2),eye-center)<0)
 			{
 				splitPolygon(current);
-				std::cout << "Split Dist " << dist << std::endl << " " << current->lod << std::endl;
+				//std::cout << "Split Dist " << dist << std::endl << " " << current->lod << std::endl;
 			}
 			else if (current->lod > 1)
 			{
 				treshhold = getTreshholdDistance(current->lod - 1);
-					if (dist >= treshhold+3000)
+					if (glm::dot(glm::cross(edge1, edge2), eye - center)>0 || dist >= treshhold+3000)
 					{
 					//	std::cout << "Reduce Dist " << dist << std::endl << " " << current->lod << std::endl;
 						reducePolygon(current);

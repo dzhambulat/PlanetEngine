@@ -24,6 +24,11 @@ glm::vec3 Camera::getEye() const
 	return this->eye;
 }
 
+glm::vec3 Camera::getCenter() const
+{
+	return this->center;
+}
+
 glm::mat4 Camera::getMatrix() const
 {
 	return glm::lookAt(this->eye, this->center, this->up);

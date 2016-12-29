@@ -27,9 +27,9 @@ glm::vec3* Sphere::getVertexData(int* length)
 	return result;
 }
 
-void Sphere::render(glm::vec3 eye)
+void Sphere::render(glm::vec3 eye,glm::vec3 center)
 {
-	this->terrain->process(eye);
+	this->terrain->process(eye,center);
 }
 Sphere::~Sphere()
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm\glm.hpp>
+#include "Camera.h"
 #include <memory>
 #include <iostream>
 using namespace glm;
@@ -41,7 +42,7 @@ namespace Roam
 
 	private:
 
-		int trashes[10] = {100000,90000,80000,50000,25000,10000,5000,2000,1000,500};
+		double trashes[18] = {50000,30000,20000,10000,5000,1000,500,200,100,50,30,20,10,3,0.3,0.2};
 		glm::vec3 (*processFunc)(glm::vec3 pos);
 		shared_ptr<PolygonNode> lastNode;
 		shared_ptr<PolygonNode> firstNode;
@@ -59,7 +60,7 @@ namespace Roam
 		~RoamTerrain();
 
 		void initialize(const float* data, int length, glm::vec3 (*f)(glm::vec3 pos)); // initialize with pointers data
-		void process(glm::vec3 eye);
+		void process(glm::vec3 eye,glm::vec3 center);
 		
 		int getAllVertices(vec3** data) const; 
 

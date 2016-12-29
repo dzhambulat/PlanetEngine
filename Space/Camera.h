@@ -19,6 +19,7 @@ public:
 	void moveForward(float step);
 
 	glm::vec3 getEye() const;
+	glm::vec3 getCenter() const;
 	glm::mat4 getMatrix() const;
 };
 

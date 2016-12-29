@@ -93,7 +93,7 @@ int main()
 	//glm::mat4 rot = glm::rotate(glm::mat4(1.0), 2, glm::vec3(0.0, 1.0, 0.0));
 	model = proj*cam;
 	GLuint mvp = glGetUniformLocation(program, "mvp");
-
+	GLuint camv = glGetUniformLocation(program, "cam");
 	
 	while (!glfwWindowShouldClose(window))
 	{
@@ -105,7 +105,7 @@ int main()
 		glDepthFunc(GL_LESS);
 		glDepthRange(0.0f, 1.0f);
 
-		sphere.render(camera.getEye());
+		sphere.render(camera.getEye(),camera.getCenter());
 		verts = sphere.getVertexData(&vertexCount);
 		delete[] data;
 		data = new GLfloat[vertexCount * 3];
@@ -125,10 +125,12 @@ int main()
 		model = proj*cam;
 		glUniformMatrix4fv(mvp, 1, GL_FALSE, &model[0][0]);
 		
+		auto dir = camera.getEye() - camera.getCenter();
+		glUniform3fv(camv, 1,&(dir / glm::length(dir))[0]);
 		glBindVertexArray(vao);
 	/*	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
-	//	cout << vertexCount/3.0 << " ";
+		//cout << vertexCount/3.0 << " ";
 		/*glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);*/
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 		glBindVertexArray(0);
@@ -177,22 +179,32 @@ void on_keyboard(GLFWwindow* window, int key, int scanCode, int action, int mode
 	if (key == GLFW_KEY_UP)
 	{
 
-		if (dist< 6001) return;
+		if (dist< 6000.001) return;
 		if (dist > 8500)
 		camera.moveForward(1000);
-		else
+		else if (dist>6100 )
 		{
 			//	else if (dist > 6550)
 			//	{
-			camera.moveForward(5);
+			camera.moveForward(10);
 			std::cout << "Height " << dist << " ";
 			//	}
+		}
+		else if (dist > 6001)
+		{
+			camera.moveForward(0.1);
+			std::cout << "Height " << dist << " ";
+		}
+		else if (dist > 6000.5)
+		{
+			camera.moveForward(0.1);
+			std::cout << "Height " << dist << " ";
 		}
 	}
 	if (key == GLFW_KEY_DOWN)
 	{
 		glm::vec3 eye = camera.getEye();
-		eye.z -= 150;
+		eye.z -= 0.5;
 		camera.setEye(eye);
 	}
 	if (key == GLFW_KEY_Q)
