@@ -38,7 +38,7 @@ int main()
 {
 	GLFWwindow* window = init(1024, 760, "Space ship");
 	
-	GLuint vbo;
+	GLuint vbo,vbo2;
 
 	Sphere sphere(6000);
 
@@ -52,16 +52,39 @@ int main()
 		data[i * 3 + 1] = verts[i].y;
 		data[i * 3 + 2] = verts[i].z;
 	}
+
+	int nCount = 0;
+	auto norms = sphere.getNormalData(&nCount);
+	GLfloat* dataNorm = new GLfloat[nCount * 3];
+	for (int i = 0; i < nCount; i++)
+	{
+		dataNorm[i * 3] = norms[i].x;
+		dataNorm[i * 3 + 1] = norms[i].y;
+		dataNorm[i * 3 + 2] = norms[i].z;
+	}
+
+
 	
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, vertexCount*3*sizeof(GLfloat), data, GL_DYNAMIC_DRAW);
 
+	glGenBuffers(1, &vbo2);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+	glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), dataNorm, GL_DYNAMIC_DRAW);
+
 	GLuint vao;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(1);
+
 	GLuint ibo;
 
 /*	GLuint indices[] = {
@@ -116,8 +139,22 @@ int main()
 			data[i * 3 + 2] = verts[i].z;
 		}
 		delete[] verts;
+
+	    norms = sphere.getNormalData(&nCount);
+		GLfloat* dataNorm = new GLfloat[vertexCount * 3];
+		for (int i = 0; i < vertexCount; i++)
+		{
+			dataNorm[i * 3] = norms[i].x;
+			dataNorm[i * 3 + 1] = norms[i].y;
+			dataNorm[i * 3 + 2] = norms[i].z;
+		}
+
+		delete[] norms;
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(GLfloat), data, GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+		glBufferData(GL_ARRAY_BUFFER, nCount * 3 * sizeof(GLfloat), dataNorm, GL_STATIC_DRAW);
 
 		glUseProgram(program);
 
@@ -128,6 +165,7 @@ int main()
 		auto dir = camera.getEye() - camera.getCenter();
 		glUniform3fv(camv, 1,&(dir / glm::length(dir))[0]);
 		glBindVertexArray(vao);
+		
 	/*	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);*/
 		//cout << vertexCount/3.0 << " ";
@@ -186,13 +224,13 @@ void on_keyboard(GLFWwindow* window, int key, int scanCode, int action, int mode
 		{
 			//	else if (dist > 6550)
 			//	{
-			camera.moveForward(10);
+			camera.moveForward(50);
 			std::cout << "Height " << dist << " ";
 			//	}
 		}
 		else if (dist > 6001)
 		{
-			camera.moveForward(0.1);
+			camera.moveForward(1);
 			std::cout << "Height " << dist << " ";
 		}
 		else if (dist > 6000.5)

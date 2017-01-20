@@ -77,17 +77,17 @@ namespace NoiseHelpers
 
 	double perlinValue(double x, double y, double z) {
 		double result = 0.0;
-		double amp = 15.0;
+		double amp = 50.0;
 
-		int i = 15;
+		int i = 50;
 		while (i--) {
-			result += noise(x, y, z) * amp;
+			result += abs(noise(x, y, z)) * amp;
 			x *= 2.0;
 			y *= 2.0;
 			z *= 2.0;
 			amp *= 0.5;
 		}
 
-		return abs(result)*100;
+		return abs(result);
 	}
 }

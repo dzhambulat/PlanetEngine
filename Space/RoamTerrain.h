@@ -31,6 +31,7 @@ namespace Roam
 			//	cout << "remove";
 			}
 			vec3 pointers[3];
+			vec3 normal[3];
 			bool splitted = false;
 			int lod = 1;
 			shared_ptr<PolygonNode> firstChild, secondChild, thirdChild, centerChild; //clockwise
@@ -42,7 +43,7 @@ namespace Roam
 
 	private:
 
-		double trashes[18] = {50000,30000,20000,10000,5000,1000,500,200,100,50,30,20,10,3,0.3,0.2};
+		double trashes[18] = {50000,30000,20000,10000,5000,1000,500,200,100,80,60,50,30,20,15,10};
 		glm::vec3 (*processFunc)(glm::vec3 pos);
 		shared_ptr<PolygonNode> lastNode;
 		shared_ptr<PolygonNode> firstNode;
@@ -51,8 +52,10 @@ namespace Roam
 		void addRenderNode(shared_ptr<PolygonNode> polygonNode);
 		void removeNode(shared_ptr<PolygonNode> polygonNode);
 		void splitPolygon(shared_ptr<PolygonNode> polygonNode, int endLod);
-		float getTreshholdDistance(int lod) const;
+		void createPatch(shared_ptr<PolygonNode> polygonNode, int sideNum, glm::vec3 point);
 		void RoamTerrain::addRenderNodeFirst(shared_ptr<PolygonNode> node);
+
+		float getTreshholdDistance(int lod) const;
 		float getDistanceFromPolygon(glm::vec3 eye,shared_ptr<PolygonNode> polygonNode) const;
 		int polygonCount = 0;
 	public:
@@ -63,6 +66,7 @@ namespace Roam
 		void process(glm::vec3 eye,glm::vec3 center);
 		
 		int getAllVertices(vec3** data) const; 
+		int getAllNormals(vec3** data) const;
 
 
 	};

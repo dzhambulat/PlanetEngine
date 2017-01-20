@@ -1,3 +1,30 @@
-﻿  NoiseHelper.cpp
+﻿  Sphere.cpp
+c:\my projects\graphicexample\space\spaceship\space\sphere.cpp(5): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+  Space.cpp
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(88): warning C4101: ibo: неиспользованная локальная переменная
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(238): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(250): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(254): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(258): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(262): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(266): warning C4305: аргумент: усечение из "double" к "float"
+c:\my projects\graphicexample\space\spaceship\space\space.cpp(270): warning C4305: аргумент: усечение из "double" к "float"
+  ShaderHelper.cpp
+  RoamTerrain.cpp
+c:\my projects\graphicexample\space\spaceship\space\roamterrain.cpp(207): warning C4244: return: преобразование "const double" в "float", возможна потеря данных
+  NoiseHelper.cpp
+  Camera.cpp
+  Создание кода...
+c:\my projects\graphicexample\space\spaceship\space\sphere.cpp(20): warning C4172: возвращение адреса локальной или временной переменной : points
+LINK : warning LNK4098: библиотека по умолчанию "LIBCMT" противоречит использованию других библиотек; используйте параметр /NODEFAULTLIB:library
+LINK : warning LNK4098: библиотека по умолчанию "MSVCRT" противоречит использованию других библиотек; используйте параметр /NODEFAULTLIB:library
+ShaderHelper.obj : warning LNK4049: импортирован локально определенный символ ___glewAttachShader
+ShaderHelper.obj : warning LNK4049: импортирован локально определенный символ ___glewCompileShader
+ShaderHelper.obj : warning LNK4049: импортирован локально определенный символ ___glewCreateProgram
+ShaderHelper.obj : warning LNK4049: импортирован локально определенный символ ___glewCreateShader
+ShaderHelper.obj : warning LNK4049: импортирован локально определенный символ ___glewGetShaderiv
+ShaderHelper.obj : warning LNK4049: импортирован локально определенный символ ___glewLinkProgram
+ShaderHelper.obj : warning LNK4049: импортирован локально определенный символ ___glewShaderSource
+glew32s.lib(glew.obj) : warning LNK4099: "vc120.pdb" PDB не найден с "glew32s.lib(glew.obj)" или на "C:\My projects\GraphicExample\Space\SpaceShip\Debug\vc120.pdb"; компоновка объекта выполняется как при отсутствии отладочных данных
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.exe
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.pdb (Full PDB)

@@ -77,6 +77,42 @@ namespace Roam
 		splitPolygon(node->centerChild, endLod);
 	}
 
+	void RoamTerrain::createPatch(shared_ptr<PolygonNode> polygonNode, int sideNum, glm::vec3 point)
+	{
+		glm::vec3 fp1, sp1, tp1, fp2, sp2, tp2;
+
+		fp1 = point; fp2 = point;
+		if (sideNum == 1)
+		{
+			sp1 = polygonNode->pointers[1];
+			tp1 = polygonNode->pointers[2];
+			sp2 = polygonNode->pointers[2];
+			tp2 = polygonNode->pointers[0];
+		}
+		else if (sideNum == 2)
+		{
+			sp1 = polygonNode->pointers[2];
+			tp1 = polygonNode->pointers[0];
+			sp2 = polygonNode->pointers[0];
+			tp2 = polygonNode->pointers[1];
+		}
+		else if (sideNum == 3)
+		{
+			sp1 = polygonNode->pointers[0];
+			tp1 = polygonNode->pointers[1];
+			sp2 = polygonNode->pointers[1];
+			tp2 = polygonNode->pointers[2];
+		}
+
+		auto firstPolygon = make_shared<PolygonNode>();
+		auto secondPolygon = make_shared<PolygonNode>();
+
+		firstPolygon->parent = polygonNode;
+		secondPolygon->parent = polygonNode;
+
+		removeNode(polygonNode);
+	}
+
 	void RoamTerrain::splitPolygon(shared_ptr<PolygonNode> node)
 	{
 
@@ -95,26 +131,49 @@ namespace Roam
 		ft += node->pointers[2];
 		ft = processFunc(ft);
 
+		
+		vec3 nv1, nv2,norm;
+
 		int newLod = node->lod + 1;
 		node->firstChild = make_shared<PolygonNode>(node, newLod);
 		node->firstChild->pointers[0] = node->pointers[0];
 		node->firstChild->pointers[1] = fs;
 		node->firstChild->pointers[2] = ft;
+		nv1 = node->firstChild->pointers[2] - node->pointers[0];
+		nv2 = node->firstChild->pointers[1] - node->pointers[0];
+		norm = glm::cross(nv1, nv2);
+		norm /= glm::length(norm);
+		node->firstChild->normal[0] = node->firstChild->normal[1] = node->firstChild->normal[2] = norm;
 
 		node->secondChild = make_shared<PolygonNode>(node, newLod);
 		node->secondChild->pointers[0] = fs;
 		node->secondChild->pointers[1] = node->pointers[1];
 		node->secondChild->pointers[2] = st;
+		nv1 = node->secondChild->pointers[2] - node->pointers[0];
+		nv2 = node->secondChild->pointers[1] - node->pointers[0];
+		norm = glm::cross(nv1, nv2);
+		norm /= glm::length(norm);
+		node->secondChild->normal[0] = node->secondChild->normal[1] = node->secondChild->normal[2] = norm;
 
 		node->thirdChild = make_shared<PolygonNode>(node, newLod);
 		node->thirdChild->pointers[0] = ft;
 		node->thirdChild->pointers[1] = st;
 		node->thirdChild->pointers[2] = node->pointers[2];
+		nv1 = node->thirdChild->pointers[2] - node->pointers[0];
+		nv2 = node->thirdChild->pointers[1] - node->pointers[0];
+		norm = glm::cross(nv1, nv2);
+		norm /= glm::length(norm);
+		node->thirdChild->normal[0] = node->thirdChild->normal[1] = node->thirdChild->normal[2] = norm;
 
 		node->centerChild = make_shared<PolygonNode>(node, newLod);
 		node->centerChild->pointers[0] = st;
 		node->centerChild->pointers[1] = ft;
 		node->centerChild->pointers[2] = fs;
+		nv1 = node->centerChild->pointers[2] - node->pointers[0];
+		nv2 = node->centerChild->pointers[1] - node->pointers[0];
+		norm = glm::cross(nv1, nv2);
+		norm /= glm::length(norm);
+		node->centerChild->normal[0] = node->centerChild->normal[1] = node->centerChild->normal[2] = norm;
 
 		addRenderNodeFirst(node->firstChild);
 		addRenderNodeFirst(node->secondChild);
@@ -196,6 +255,26 @@ namespace Roam
 			data[index] = current->pointers[0];
 			data[index + 1] = current->pointers[1];
 			data[index + 2] = current->pointers[2];
+			current = current->next;
+			index += 3;
+		}
+		*result = data;
+
+		return vertexCount;
+	}
+
+	int RoamTerrain::getAllNormals(vec3** result) const
+	{
+		int vertexCount = polygonCount * 3;
+		vec3* data = new vec3[vertexCount];
+
+		shared_ptr<PolygonNode> current = firstNode;
+		int index = 0;
+		while (current != nullptr)
+		{
+			data[index] = current->normal[0];
+			data[index + 1] = current->normal[1];
+			data[index + 2] = current->normal[2];
 			current = current->next;
 			index += 3;
 		}

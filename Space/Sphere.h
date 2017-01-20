@@ -16,6 +16,8 @@ class Sphere
 	}
 
 	glm::vec3* getVertexData(int*);
+	glm::vec3* getNormalData(int*);
+
 	void render(glm::vec3 eye,glm::vec3 center);
 	~Sphere();
 	
