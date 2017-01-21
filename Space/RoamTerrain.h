@@ -18,8 +18,15 @@ namespace Roam
 			{
 				parent = nullptr;
 				firstChild = secondChild = thirdChild = centerChild = nullptr;
+				
 			}
 
+			PolygonNode(vec3 p1,vec3 p2,vec3 p3)
+			{
+				pointers[0] = p1;
+				pointers[1] = p2;
+				pointers[2] = p3;
+			}
 			PolygonNode(shared_ptr<PolygonNode> node,int lod):PolygonNode()
 			{
 				parent = node;
@@ -34,9 +41,11 @@ namespace Roam
 			vec3 normal[3];
 			bool splitted = false;
 			int lod = 1;
+			bool isPatch = false;
 			shared_ptr<PolygonNode> firstChild, secondChild, thirdChild, centerChild; //clockwise
 			shared_ptr<PolygonNode> parent;
-
+			shared_ptr<PolygonNode> firstNeigh, secondNeigh, thirdNeigh;
+			shared_ptr<PolygonNode> patchNode1, patchNode2;
 			shared_ptr<PolygonNode> next, prev;
 		};
 
@@ -53,6 +62,7 @@ namespace Roam
 		void removeNode(shared_ptr<PolygonNode> polygonNode);
 		void splitPolygon(shared_ptr<PolygonNode> polygonNode, int endLod);
 		void createPatch(shared_ptr<PolygonNode> polygonNode, int sideNum, glm::vec3 point);
+		void setNeighboursForChild(shared_ptr<PolygonNode> polygon1, shared_ptr<PolygonNode> polygon2, int side);
 		void RoamTerrain::addRenderNodeFirst(shared_ptr<PolygonNode> node);
 
 		float getTreshholdDistance(int lod) const;

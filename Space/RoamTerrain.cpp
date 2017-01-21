@@ -26,7 +26,9 @@ namespace Roam
 			current->pointers[0] = glm::vec3(data[i * 9], data[i * 9 + 1], data[i * 9 + 2]);
 			current->pointers[1] = glm::vec3(data[i * 9 + 3], data[i * 9 + 4], data[i * 9 + 5]);
 			current->pointers[2] = glm::vec3(data[i * 9 + 6], data[i * 9 + 7], data[i * 9 + 8]);
+
 			splitPolygon(current, 5);
+
 			if (i < length / 9 - 1)
 			{
 				current->next = make_shared<PolygonNode>();
@@ -104,17 +106,54 @@ namespace Roam
 			tp2 = polygonNode->pointers[2];
 		}
 
-		auto firstPolygon = make_shared<PolygonNode>();
-		auto secondPolygon = make_shared<PolygonNode>();
+		auto firstPolygon = make_shared<PolygonNode>(fp1, sp2, tp1);
+		auto secondPolygon = make_shared<PolygonNode>(fp2, sp2, tp2);
 
+		polygonNode->isPatch = true;
 		firstPolygon->parent = polygonNode;
 		secondPolygon->parent = polygonNode;
+
+		polygonNode->patchNode1 = firstPolygon;
+		polygonNode->patchNode2 = secondPolygon;
 
 		removeNode(polygonNode);
 	}
 
+	void RoamTerrain::setNeighboursForChild(shared_ptr<PolygonNode> polygon1, shared_ptr<PolygonNode> polygon2, int side)
+	{
+		switch (side)
+		{
+		case 1:
+			polygon1->firstChild->firstNeigh = polygon2->secondChild;
+			polygon1->secondChild->firstNeigh = polygon2->firstChild;
+
+			polygon2->firstChild->firstNeigh = polygon1->secondChild;
+			polygon2->secondChild->firstNeigh = polygon1->firstChild;
+			break;
+		case 2:
+			polygon1->secondChild->secondNeigh = polygon2->thirdChild;
+			polygon1->thirdChild->secondNeigh = polygon2->secondChild;
+
+			polygon2->secondChild->secondNeigh = polygon1->thirdChild;
+			polygon2->thirdChild->secondNeigh = polygon1->secondChild;
+			break;
+		case 3:
+			polygon1->thirdChild->thirdNeigh = polygon2->firstChild;
+			polygon1->firstChild->thirdNeigh = polygon2->thirdChild;
+
+			polygon2->thirdChild->thirdNeigh = polygon1->firstChild;
+			polygon2->firstChild->thirdNeigh = polygon1->thirdChild;
+			break;
+		}
+	}
+
 	void RoamTerrain::splitPolygon(shared_ptr<PolygonNode> node)
 	{
+		if (node->lod >1 && (node->firstNeigh == nullptr || node->secondNeigh == nullptr || node->thirdNeigh == nullptr)) return;
+
+		node->isPatch = false;
+		node->patchNode1 = nullptr;
+		node->patchNode2 = nullptr;
 
 		vec3 fs = node->pointers[1] - node->pointers[0];
 		fs /= 2;
@@ -174,6 +213,19 @@ namespace Roam
 		norm = glm::cross(nv1, nv2);
 		norm /= glm::length(norm);
 		node->centerChild->normal[0] = node->centerChild->normal[1] = node->centerChild->normal[2] = norm;
+
+		if (node->lod > 1)
+		{
+			if (node->firstNeigh->centerChild != nullptr)
+				setNeighboursForChild(node, node->firstNeigh, 1);
+			else createPatch(node->firstNeigh, 1, fs);
+			if (node->secondNeigh->centerChild != nullptr)
+				setNeighboursForChild(node, node->secondNeigh, 2);
+			else createPatch(node->secondNeigh, 2, st);
+			if (node->thirdNeigh->centerChild != nullptr)
+				setNeighboursForChild(node, node->thirdNeigh, 3);
+			else createPatch(node->thirdNeigh, 3, ft);
+		}
 
 		addRenderNodeFirst(node->firstChild);
 		addRenderNodeFirst(node->secondChild);
@@ -252,11 +304,26 @@ namespace Roam
 		int index = 0;
 		while (current != nullptr)
 		{
-			data[index] = current->pointers[0];
-			data[index + 1] = current->pointers[1];
-			data[index + 2] = current->pointers[2];
-			current = current->next;
-			index += 3;
+			if (!current->isPatch)
+			{
+				data[index] = current->pointers[0];
+				data[index + 1] = current->pointers[1];
+				data[index + 2] = current->pointers[2];
+				current = current->next;
+				index += 3;
+			}
+			else
+			{
+				data[index] = current->patchNode1->pointers[0];
+				data[index + 1] = current->patchNode1->pointers[1];
+				data[index + 2] = current->patchNode1->pointers[2];
+
+				data[index + 3] = current->patchNode2->pointers[0];
+				data[index + 4] = current->patchNode2->pointers[1];
+				data[index + 5] = current->patchNode2->pointers[2];
+				current = current->next;
+				index += 6;
+			}
 		}
 		*result = data;
 
