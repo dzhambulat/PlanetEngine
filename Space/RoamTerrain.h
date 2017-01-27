@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include <memory>
 #include <iostream>
+#include <tuple>
+
 using namespace glm;
 using namespace std;
 
@@ -66,6 +68,7 @@ namespace Roam
 		void RoamTerrain::addRenderNodeFirst(shared_ptr<PolygonNode> node);
 
 		float getTreshholdDistance(int lod) const;
+		std::tuple<int,int> findBorders(shared_ptr<PolygonNode> fnode, shared_ptr<PolygonNode> snode) const;
 		float getDistanceFromPolygon(glm::vec3 eye,shared_ptr<PolygonNode> polygonNode) const;
 		int polygonCount = 0;
 	public:

@@ -27,7 +27,7 @@ namespace Roam
 			current->pointers[1] = glm::vec3(data[i * 9 + 3], data[i * 9 + 4], data[i * 9 + 5]);
 			current->pointers[2] = glm::vec3(data[i * 9 + 6], data[i * 9 + 7], data[i * 9 + 8]);
 
-			splitPolygon(current, 5);
+		//	splitPolygon(current, 5);
 
 			if (i < length / 9 - 1)
 			{
@@ -37,6 +37,54 @@ namespace Roam
 			}
 		
 			lastNode = current;
+		}
+
+		current = this->firstNode;
+		shared_ptr<PolygonNode> current2 = this->firstNode;
+
+		while (current != nullptr)
+		{
+			current2 = current->next;
+			while (current2 != nullptr)
+			{
+
+				int s1, s2;
+				tie(s1,s2) = findBorders(current, current2);
+				if (s1 < 0 || s2 < 0) {
+					current2 = current2->next;
+					continue;
+				}
+				shared_ptr<PolygonNode> PolygonNode::*s1p, PolygonNode::*s2p;
+				switch (s1)
+				{
+				case 1:
+					s1p = &PolygonNode::firstNeigh;
+					break;
+				case 2:
+					s1p = &PolygonNode::secondNeigh;
+					break;
+				case 3:
+					s1p = &PolygonNode::thirdNeigh;
+					break;
+				}
+				switch (s2)
+				{
+				case 1:
+					s2p = &PolygonNode::firstNeigh;
+					break;
+				case 2:
+					s2p = &PolygonNode::secondNeigh;
+					break;
+				case 3:
+					s2p = &PolygonNode::thirdNeigh;
+					break;
+				}
+				(*current).*s1p = current2;
+				(*current2).*s2p = current;
+
+				current2 = current2->next;
+			}
+			current = current->next;
 		}
 
 	}
@@ -121,6 +169,19 @@ namespace Roam
 
 	void RoamTerrain::setNeighboursForChild(shared_ptr<PolygonNode> polygon1, shared_ptr<PolygonNode> polygon2, int side)
 	{
+		int side2 = 0;
+		if (polygon2->firstChild == polygon1)
+		{
+			side2 = 1;
+		}
+		else if (polygon2->secondChild == polygon1)
+		{
+			side2 = 2;
+		}
+		else
+		{
+			side2 = 3;
+		}
 		switch (side)
 		{
 		case 1:
@@ -226,7 +287,7 @@ namespace Roam
 				setNeighboursForChild(node, node->thirdNeigh, 3);
 			else createPatch(node->thirdNeigh, 3, ft);
 		}
-
+		
 		addRenderNodeFirst(node->firstChild);
 		addRenderNodeFirst(node->secondChild);
 		addRenderNodeFirst(node->thirdChild);
@@ -257,6 +318,56 @@ namespace Roam
 	{
 		//return 800000.0/pow(2, lod-1);
 		return  this->trashes[lod - 1];
+	}
+
+	std::tuple<int, int> RoamTerrain::findBorders(shared_ptr<PolygonNode> fnode, shared_ptr<PolygonNode> snode) const
+	{
+		int i = 0, j = 0;
+		bool finded = false;
+		for (i = 0; i < 3; i++)
+		{
+			for (j = 0; j < 3; j++)
+			{
+				if (fnode->pointers[i] == snode->pointers[j]) {
+					finded = true; break;
+				};
+			}
+			if (finded) break;
+		}
+		if (!finded) return make_tuple(-1, -1);
+		
+		finded = false;
+		int k = i + 1;
+		int l = 0;
+		for (k; k < 3; k++)
+		{
+			for (l = 0; l < 3; l++)
+			{
+				if (fnode->pointers[k] == snode->pointers[l]) {
+					finded = true; break;
+				};
+			}
+			if (finded) break;
+		}
+		if (!finded) return make_tuple(-1, -1);
+		int side1, side2;
+		if (i == 0 && k == 1)
+			side1 = 1;
+		if (i == 0 && k == 2)
+			side1 = 3;
+		if (i == 1 && k == 2)
+			side1 = 2;
+
+		if (j + l == 1)
+			side2 = 1;
+		if (j + l == 2)
+			side2 = 3;
+		if (j + l == 3)
+			side2 = 2;
+
+		return make_tuple(side1, side2);
+
+
 	}
 
 	float RoamTerrain::getDistanceFromPolygon(glm::vec3 eye, shared_ptr<PolygonNode> polygonNode) const

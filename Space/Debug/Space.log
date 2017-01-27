@@ -1,4 +1,4 @@
 ﻿  RoamTerrain.cpp
-c:\my projects\graphicexample\space\spaceship\space\roamterrain.cpp(259): warning C4244: return: преобразование "const double" в "float", возможна потеря данных
+c:\my projects\graphicexample\space\spaceship\space\roamterrain.cpp(307): warning C4244: return: преобразование "const double" в "float", возможна потеря данных
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.exe
   Space.vcxproj -> C:\My projects\GraphicExample\Space\SpaceShip\Debug\Space.pdb (Full PDB)
